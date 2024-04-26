@@ -48,6 +48,7 @@ public class DataType {
       case WKB:
         out.geometryType = GeometryType.GEOMETRY;
         out.dimensions = Dimensions.UNKNOWN;
+        out.coordType = CoordType.UNKNOWN;
         out.encoding = encoding;
         return out;
       case GEOARROW:
@@ -123,6 +124,26 @@ public class DataType {
 
   public Crs getCrs() {
     return crs;
+  }
+
+  @Override
+  public boolean equals(Object other) {
+    if (!(other instanceof DataType)) {
+      return false;
+    }
+
+    DataType otherDt = (DataType) other;
+
+    if (otherDt.crs == null && crs != null) {
+      return false;
+    }
+
+    return otherDt.encoding == encoding
+        && otherDt.geometryType == geometryType
+        && otherDt.dimensions == dimensions
+        && otherDt.coordType == coordType
+        && otherDt.edgeType == edgeType
+        && otherDt.crs.equals(crs);
   }
 
   public String getExtensionName() {

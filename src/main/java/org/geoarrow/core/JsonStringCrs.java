@@ -16,5 +16,14 @@ public class JsonStringCrs implements Crs {
     return jsonString;
   }
 
+  @Override
+  public boolean equals(Object other) {
+    if (!(other instanceof JsonStringCrs)) {
+      return false;
+    }
+
+    return ((JsonStringCrs) other).jsonString == jsonString;
+  }
+
   private String jsonString;
 }
