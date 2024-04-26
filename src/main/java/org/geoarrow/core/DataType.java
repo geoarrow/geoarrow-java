@@ -3,10 +3,15 @@ package org.geoarrow.core;
 public class DataType {
 
   public DataType(GeometryType geometryType) {
-    if (geometryType == GeometryType.GEOMETRY) {
-      throw new IllegalArgumentException("Can't create DataType from GEOMETRY");
+    switch (geometryType) {
+      case GEOMETRY:
+      case GEOMETRYCOLLECTION:
+        throw new IllegalArgumentException("Can't create DataType from GEOMETRY");
+      default:
+        break;
     }
 
+    this.encoding = Encoding.GEOARROW;
     this.geometryType = geometryType;
     this.dimensions = Dimensions.XY;
     this.coordType = CoordType.SEPARATE;
@@ -14,9 +19,13 @@ public class DataType {
   }
 
   public DataType(Encoding encoding) {
-    if (encoding == Encoding.GEOARROW) {
-      throw new IllegalArgumentException(
-          "Use DataType(GeometryType) to construct a type with GeoArrow encoding");
+    switch (encoding) {
+      case WKB:
+      case WKT:
+        break;
+      default:
+        throw new IllegalArgumentException(
+            "Use DataType(GeometryType) to construct a type with GeoArrow encoding");
     }
 
     this.encoding = encoding;
