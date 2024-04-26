@@ -1,4 +1,4 @@
-package com.geoarrow.core;
+package org.geoarrow.core;
 
 import static org.junit.Assert.assertTrue;
 

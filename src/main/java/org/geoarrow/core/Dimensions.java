@@ -1,4 +1,4 @@
-package com.geoarrow.core;
+package org.geoarrow.core;
 
 /** Dimension combinations supported by GeoArrow. */
 public enum Dimensions {

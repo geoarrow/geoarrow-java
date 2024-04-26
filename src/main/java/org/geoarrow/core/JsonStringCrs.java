@@ -1,4 +1,4 @@
-package com.geoarrow.core;
+package org.geoarrow.core;
 
 public class JsonStringCrs implements Crs {
 

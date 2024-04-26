@@ -1,4 +1,4 @@
-package com.geoarrow.core;
+package org.geoarrow.core;
 
 /** Geometry type identifiers supported by GeoArrow. */
 public enum GeometryType {
