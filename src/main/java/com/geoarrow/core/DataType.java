@@ -2,7 +2,95 @@ package com.geoarrow.core;
 
 public class DataType {
 
-  private DataType(Encoding encoding) {}
+  public DataType(GeometryType geometryType) {
+    if (geometryType == GeometryType.GEOMETRY) {
+      throw new IllegalArgumentException("Can't create DataType from GEOMETRY");
+    }
+
+    this.geometryType = geometryType;
+    this.dimensions = Dimensions.XY;
+    this.coordType = CoordType.SEPARATE;
+    this.edgeType = EdgeType.PLANAR;
+  }
+
+  public DataType(Encoding encoding) {
+    if (encoding == Encoding.GEOARROW) {
+      throw new IllegalArgumentException(
+          "Use DataType(GeometryType) to construct a type with GeoArrow encoding");
+    }
+
+    this.encoding = encoding;
+  }
+
+  private DataType(DataType other) {
+    this.encoding = other.encoding;
+    this.geometryType = other.geometryType;
+    this.dimensions = other.dimensions;
+    this.coordType = other.coordType;
+    this.edgeType = other.edgeType;
+    this.crs = other.crs;
+  }
+
+  public DataType withEncoding(Encoding encoding) {
+    DataType out = new DataType(this);
+
+    switch (encoding) {
+      case WKT:
+      case WKB:
+        out.geometryType = GeometryType.GEOMETRY;
+        out.dimensions = Dimensions.UNKNOWN;
+        out.encoding = encoding;
+        return out;
+      case GEOARROW:
+        if (this.encoding == Encoding.GEOARROW) {
+          return out;
+        }
+      default:
+        throw new IllegalArgumentException("Can't set encoding");
+    }
+  }
+
+  public DataType withGeometryType(GeometryType geometryType) {
+    if (encoding != Encoding.GEOARROW) {
+      throw new IllegalStateException("Can't set geometryType of non-GeoArrow type");
+    }
+
+    DataType out = new DataType(this);
+    out.geometryType = geometryType;
+    return out;
+  }
+
+  public DataType withDimensions(Dimensions dimensions) {
+    if (encoding != Encoding.GEOARROW) {
+      throw new IllegalStateException("Can't set geometryType of non-GeoArrow type");
+    }
+
+    DataType out = new DataType(this);
+    out.dimensions = dimensions;
+    return out;
+  }
+
+  public DataType withCoordType(CoordType coordType) {
+    if (encoding != Encoding.GEOARROW) {
+      throw new IllegalStateException("Can't set geometryType of non-GeoArrow type");
+    }
+
+    DataType out = new DataType(this);
+    out.coordType = coordType;
+    return out;
+  }
+
+  public DataType withEdgeType(EdgeType edgeType) {
+    DataType out = new DataType(this);
+    out.edgeType = edgeType;
+    return out;
+  }
+
+  public DataType withCrs(Crs crs) {
+    DataType out = new DataType(this);
+    out.crs = crs;
+    return out;
+  }
 
   public Encoding getEncoding() {
     return encoding;
@@ -28,7 +116,7 @@ public class DataType {
     return crs;
   }
 
-  public String getExtensionType() {
+  public String getExtensionName() {
     switch (encoding) {
       case WKT:
         return "geoarrow.wkt";
@@ -59,15 +147,24 @@ public class DataType {
   }
 
   public String getExtensionMetadata() {
-    String out = "{";
+    StringBuilder out = new StringBuilder();
+    out.append("{");
 
     if (crs != null) {
-      out = out + "\"crs\": " + crs.toPROJJSON();
+      out.append("\"crs\": " + crs.toPROJJSON());
     }
 
-    // Edge type
+    if (edgeType == EdgeType.SPHERICAL) {
+      if (crs != null) {
+        out.append(",");
+      }
 
-    return out + "}";
+      out.append("\"edges\": \"spherical\", ");
+    }
+
+    out.append("}");
+
+    return out.toString();
   }
 
   private Encoding encoding = Encoding.UNKNOWN;
