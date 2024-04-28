@@ -181,7 +181,8 @@ public class DataType {
     out.append("{");
 
     if (crs != null) {
-      out.append("\"crs\": " + crs.toPROJJSON());
+      out.append("\"crs\":");
+      out.append(crs.toPROJJSON());
     }
 
     if (edgeType == EdgeType.SPHERICAL) {
@@ -189,7 +190,7 @@ public class DataType {
         out.append(",");
       }
 
-      out.append("\"edges\": \"spherical\", ");
+      out.append("\"edges\":\"spherical\"");
     }
 
     out.append("}");

@@ -51,7 +51,7 @@ public class DataTypeTest {
   }
 
   @Test
-  public void setEncodingFromGeoArrowType() {
+  public void withEncodingFromGeoArrowType() {
     DataType dt =
         new DataType(GeometryType.POINT)
             .withEdgeType(EdgeType.SPHERICAL)
@@ -67,5 +67,51 @@ public class DataTypeTest {
     assertEquals(wkb.getCrs(), new JsonStringCrs("{}"));
 
     assertEquals(dt.withEncoding(Encoding.GEOARROW), dt);
+  }
+
+  @Test
+  public void withEncodingFromSerializedType() {
+    DataType dt =
+        new DataType(Encoding.WKT)
+            .withEdgeType(EdgeType.SPHERICAL)
+            .withCrs(new JsonStringCrs("{}"));
+
+    DataType wkb = dt.withEncoding(Encoding.WKB);
+    assertEquals(wkb.getEncoding(), Encoding.WKB);
+    assertEquals(wkb.getEdgeType(), EdgeType.SPHERICAL);
+    assertEquals(wkb.getCoordType(), CoordType.UNKNOWN);
+    assertEquals(wkb.getDimensions(), Dimensions.UNKNOWN);
+    assertEquals(wkb.getCrs(), new JsonStringCrs("{}"));
+
+    assertEquals(dt.withEncoding(Encoding.WKT), dt);
+  }
+
+  @Test
+  public void extensionName() {
+    assertEquals(new DataType(Encoding.WKT).getExtensionName(), "geoarrow.wkt");
+    assertEquals(new DataType(Encoding.WKB).getExtensionName(), "geoarrow.wkb");
+    assertEquals(new DataType(GeometryType.POINT).getExtensionName(), "geoarrow.point");
+    assertEquals(new DataType(GeometryType.LINESTRING).getExtensionName(), "geoarrow.linestring");
+    assertEquals(new DataType(GeometryType.POLYGON).getExtensionName(), "geoarrow.polygon");
+    assertEquals(new DataType(GeometryType.MULTIPOINT).getExtensionName(), "geoarrow.multipoint");
+    assertEquals(
+        new DataType(GeometryType.MULTILINESTRING).getExtensionName(), "geoarrow.multilinestring");
+    assertEquals(
+        new DataType(GeometryType.MULTIPOLYGON).getExtensionName(), "geoarrow.multipolygon");
+  }
+
+  @Test
+  public void extensionMetadata() {
+    DataType dt = new DataType(Encoding.WKB);
+    DataType spherical = dt.withEdgeType(EdgeType.SPHERICAL);
+    DataType withCrs = dt.withCrs(new JsonStringCrs("{}"));
+    DataType sphericaWithCrs = withCrs.withEdgeType(EdgeType.SPHERICAL);
+
+    assertEquals("{}", dt.getExtensionMetadata());
+    assertEquals("{\"edges\":\"spherical\"}", spherical.getExtensionMetadata());
+
+    assertEquals("{\"crs\":{}}", withCrs.getExtensionMetadata());
+
+    assertEquals("{\"crs\":{},\"edges\":\"spherical\"}", sphericaWithCrs.getExtensionMetadata());
   }
 }
