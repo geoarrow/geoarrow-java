@@ -65,6 +65,15 @@ public class DataType {
       throw new IllegalStateException("Can't set geometryType of non-GeoArrow type");
     }
 
+    switch (geometryType) {
+      case GEOMETRY:
+      case GEOMETRYCOLLECTION:
+        throw new IllegalArgumentException(
+            "Can't set geometryType to GEOMETRY or GEOMETRYCOLLECTION");
+      default:
+        break;
+    }
+
     DataType out = new DataType(this);
     out.geometryType = geometryType;
     return out;
@@ -73,6 +82,13 @@ public class DataType {
   public DataType withDimensions(Dimensions dimensions) {
     if (encoding != Encoding.GEOARROW) {
       throw new IllegalStateException("Can't set geometryType of non-GeoArrow type");
+    }
+
+    switch (dimensions) {
+      case UNKNOWN:
+        throw new IllegalArgumentException("Can't set dimensions to UNKNOWN");
+      default:
+        break;
     }
 
     DataType out = new DataType(this);
@@ -85,12 +101,26 @@ public class DataType {
       throw new IllegalStateException("Can't set geometryType of non-GeoArrow type");
     }
 
+    switch (coordType) {
+      case UNKNOWN:
+        throw new IllegalArgumentException("Can't set coordType to UNKNOWN");
+      default:
+        break;
+    }
+
     DataType out = new DataType(this);
     out.coordType = coordType;
     return out;
   }
 
   public DataType withEdgeType(EdgeType edgeType) {
+    switch (edgeType) {
+      case UNKNOWN:
+        throw new IllegalArgumentException("Can't set edgeType to UNKNOWN");
+      default:
+        break;
+    }
+
     DataType out = new DataType(this);
     out.edgeType = edgeType;
     return out;

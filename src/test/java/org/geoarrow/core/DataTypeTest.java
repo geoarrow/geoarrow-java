@@ -87,6 +87,84 @@ public class DataTypeTest {
   }
 
   @Test
+  public void withEdgeType() {
+    DataType dt = new DataType(Encoding.WKT);
+    assertEquals(EdgeType.PLANAR, dt.getEdgeType());
+    assertEquals(EdgeType.SPHERICAL, dt.withEdgeType(EdgeType.SPHERICAL).getEdgeType());
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void withEdgeTypeUnknownError() {
+    DataType dt = new DataType(Encoding.WKT);
+    dt.withEdgeType(EdgeType.UNKNOWN);
+  }
+
+  @Test
+  public void withCrs() {
+    DataType dt = new DataType(Encoding.WKT);
+    assertEquals(null, dt.getCrs());
+    assertEquals("{}", dt.withCrs(new JsonStringCrs("{}")).getCrs().toPROJJSON());
+  }
+
+  @Test
+  public void withGeometryType() {
+    DataType dt = new DataType(GeometryType.POINT);
+    assertEquals(GeometryType.POINT, dt.getGeometryType());
+    assertEquals(
+        GeometryType.LINESTRING, dt.withGeometryType(GeometryType.LINESTRING).getGeometryType());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void serializedTypeWithGeometryTypeError() {
+    DataType dt = new DataType(Encoding.WKT);
+    dt.withGeometryType(GeometryType.POINT);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void withGeometryTypeGeometryError() {
+    DataType dt = new DataType(GeometryType.POINT);
+    dt.withGeometryType(GeometryType.GEOMETRY);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void withGeometryTypeGeometryCollectionError() {
+    DataType dt = new DataType(GeometryType.POINT);
+    dt.withGeometryType(GeometryType.GEOMETRYCOLLECTION);
+  }
+
+  @Test
+  public void withDimensions() {
+    DataType dt = new DataType(GeometryType.POINT);
+    assertEquals(Dimensions.XY, dt.getDimensions());
+    assertEquals(Dimensions.XYZ, dt.withDimensions(Dimensions.XYZ).getDimensions());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void serializedTypeWithDimensionsError() {
+    DataType dt = new DataType(Encoding.WKT);
+    dt.withGeometryType(GeometryType.POINT);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void withDimensionsUnknownError() {
+    DataType dt = new DataType(GeometryType.POINT);
+    dt.withDimensions(Dimensions.UNKNOWN);
+  }
+
+  @Test
+  public void withCoordType() {
+    DataType dt = new DataType(GeometryType.POINT);
+    assertEquals(CoordType.SEPARATE, dt.getCoordType());
+    assertEquals(CoordType.INTERLEAVED, dt.withCoordType(CoordType.INTERLEAVED).getCoordType());
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void serializedTypeWithCoordTypeError() {
+    DataType dt = new DataType(Encoding.WKT);
+    dt.withCoordType(CoordType.SEPARATE);
+  }
+
+  @Test
   public void extensionName() {
     assertEquals(new DataType(Encoding.WKT).getExtensionName(), "geoarrow.wkt");
     assertEquals(new DataType(Encoding.WKB).getExtensionName(), "geoarrow.wkb");
