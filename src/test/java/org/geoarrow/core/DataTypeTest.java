@@ -10,11 +10,11 @@ public class DataTypeTest {
   public void constructSerializedType() {
     DataType dt = new DataType(Encoding.WKB);
 
-    assertEquals(dt.getEncoding(), Encoding.WKB);
-    assertEquals(dt.getGeometryType(), GeometryType.GEOMETRY);
-    assertEquals(dt.getDimensions(), Dimensions.UNKNOWN);
-    assertEquals(dt.getCoordType(), CoordType.UNKNOWN);
-    assertEquals(dt.getEdgeType(), EdgeType.PLANAR);
+    assertEquals(Encoding.WKB, dt.getEncoding());
+    assertEquals(GeometryType.GEOMETRY, dt.getGeometryType());
+    assertEquals(Dimensions.UNKNOWN, dt.getDimensions());
+    assertEquals(CoordType.UNKNOWN, dt.getCoordType());
+    assertEquals(EdgeType.PLANAR, dt.getEdgeType());
     assertNull(dt.getCrs());
   }
 
@@ -32,11 +32,11 @@ public class DataTypeTest {
   public void constructGeoArrowType() {
     DataType dt = new DataType(GeometryType.POINT);
 
-    assertEquals(dt.getEncoding(), Encoding.GEOARROW);
-    assertEquals(dt.getGeometryType(), GeometryType.POINT);
-    assertEquals(dt.getDimensions(), Dimensions.XY);
-    assertEquals(dt.getCoordType(), CoordType.SEPARATE);
-    assertEquals(dt.getEdgeType(), EdgeType.PLANAR);
+    assertEquals(Encoding.GEOARROW, dt.getEncoding());
+    assertEquals(GeometryType.POINT, dt.getGeometryType());
+    assertEquals(Dimensions.XY, dt.getDimensions());
+    assertEquals(CoordType.SEPARATE, dt.getCoordType());
+    assertEquals(EdgeType.PLANAR, dt.getEdgeType());
     assertNull(dt.getCrs());
   }
 
@@ -60,13 +60,13 @@ public class DataTypeTest {
             .withCrs(new JsonStringCrs("{}"));
 
     DataType wkb = dt.withEncoding(Encoding.WKB);
-    assertEquals(wkb.getEncoding(), Encoding.WKB);
-    assertEquals(wkb.getEdgeType(), EdgeType.SPHERICAL);
-    assertEquals(wkb.getCoordType(), CoordType.UNKNOWN);
-    assertEquals(wkb.getDimensions(), Dimensions.UNKNOWN);
-    assertEquals(wkb.getCrs(), new JsonStringCrs("{}"));
+    assertEquals(Encoding.WKB, wkb.getEncoding());
+    assertEquals(EdgeType.SPHERICAL, wkb.getEdgeType());
+    assertEquals(CoordType.UNKNOWN, wkb.getCoordType());
+    assertEquals(Dimensions.UNKNOWN, wkb.getDimensions());
+    assertEquals(new JsonStringCrs("{}"), wkb.getCrs());
 
-    assertEquals(dt.withEncoding(Encoding.GEOARROW), dt);
+    assertEquals(dt, dt.withEncoding(Encoding.GEOARROW));
   }
 
   @Test
@@ -77,13 +77,13 @@ public class DataTypeTest {
             .withCrs(new JsonStringCrs("{}"));
 
     DataType wkb = dt.withEncoding(Encoding.WKB);
-    assertEquals(wkb.getEncoding(), Encoding.WKB);
-    assertEquals(wkb.getEdgeType(), EdgeType.SPHERICAL);
-    assertEquals(wkb.getCoordType(), CoordType.UNKNOWN);
-    assertEquals(wkb.getDimensions(), Dimensions.UNKNOWN);
-    assertEquals(wkb.getCrs(), new JsonStringCrs("{}"));
+    assertEquals(Encoding.WKB, wkb.getEncoding());
+    assertEquals(EdgeType.SPHERICAL, wkb.getEdgeType());
+    assertEquals(CoordType.UNKNOWN, wkb.getCoordType());
+    assertEquals(Dimensions.UNKNOWN, wkb.getDimensions());
+    assertEquals(new JsonStringCrs("{}"), wkb.getCrs());
 
-    assertEquals(dt.withEncoding(Encoding.WKT), dt);
+    assertEquals(dt, dt.withEncoding(Encoding.WKT));
   }
 
   @Test
@@ -166,16 +166,16 @@ public class DataTypeTest {
 
   @Test
   public void extensionName() {
-    assertEquals(new DataType(Encoding.WKT).getExtensionName(), "geoarrow.wkt");
-    assertEquals(new DataType(Encoding.WKB).getExtensionName(), "geoarrow.wkb");
-    assertEquals(new DataType(GeometryType.POINT).getExtensionName(), "geoarrow.point");
-    assertEquals(new DataType(GeometryType.LINESTRING).getExtensionName(), "geoarrow.linestring");
-    assertEquals(new DataType(GeometryType.POLYGON).getExtensionName(), "geoarrow.polygon");
-    assertEquals(new DataType(GeometryType.MULTIPOINT).getExtensionName(), "geoarrow.multipoint");
+    assertEquals("geoarrow.wkt", new DataType(Encoding.WKT).getExtensionName());
+    assertEquals("geoarrow.wkb", new DataType(Encoding.WKB).getExtensionName());
+    assertEquals("geoarrow.point", new DataType(GeometryType.POINT).getExtensionName());
+    assertEquals("geoarrow.linestring", new DataType(GeometryType.LINESTRING).getExtensionName());
+    assertEquals("geoarrow.polygon", new DataType(GeometryType.POLYGON).getExtensionName());
+    assertEquals("geoarrow.multipoint", new DataType(GeometryType.MULTIPOINT).getExtensionName());
     assertEquals(
-        new DataType(GeometryType.MULTILINESTRING).getExtensionName(), "geoarrow.multilinestring");
+        "geoarrow.multilinestring", new DataType(GeometryType.MULTILINESTRING).getExtensionName());
     assertEquals(
-        new DataType(GeometryType.MULTIPOLYGON).getExtensionName(), "geoarrow.multipolygon");
+        "geoarrow.multipolygon", new DataType(GeometryType.MULTIPOLYGON).getExtensionName());
   }
 
   @Test
