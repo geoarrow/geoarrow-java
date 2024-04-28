@@ -6,10 +6,10 @@ on:
     branches:
       - main
 
-name: Test
+name: Verify
 
 jobs:
-  build-and-test:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,6 +17,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          cache: maven
 
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
